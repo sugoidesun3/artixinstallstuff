@@ -33,11 +33,11 @@ mkpart primary 512 33280
 name 2 root
 mkpart primary 33280 -1
 name 3 home
-w
 " | parted -a optimal "$disco"
 else
 
-printf "unit mib
+printf "mklabel msdos
+unit mib
 mkpart primary 1 512
 name 1 boot
 set 1 BOOT on
@@ -45,7 +45,6 @@ mkpart primary 512 33280
 name 2 root
 mkpart primary 33280 -1
 name 3 home
-w
 " | parted -a optimal "$disco"
 fi
 echo 'formatando discos...'
@@ -60,14 +59,14 @@ mount "${disco}1" /mnt/boot
 mount "${disco}3" /mnt/home
 vim /etc/pacman.d/mirrorlist
 echo 'esse demora um cadin'
-pacstrap /mnt base linux linux-firmware vim
+basestrap /mnt base linux linux-firmware vim openrc elogind-openrc
 clear
 echo '-----> 3 - configuracoes basicas:'
 echo 'gerando o fstab...'
-genfstab -U /mnt >> /mnt/etc/fstab
+fstabgen -U /mnt >> /mnt/etc/fstab
 echo 'vou aproveitar e levar os arquivo pra la'
 mkdir -p /mnt/root
-mv dotfiles /mnt/root/
-mv postchroot.sh /mnt/
+cp dotfiles /mnt/root/dotfiles
+cp postchroot.sh /mnt/postchroot.sh
 echo 'vamo la no chroot'
-arch-chroot /mnt "./postchroot.sh $disco"
+artix-chroot /mnt "/bin/bash ./postchroot.sh $disco"

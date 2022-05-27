@@ -1,4 +1,5 @@
 #!/bin/sh
+[[ -z $1 ]] && echo 'mula' && exit -1
 disco=$1
 isefi=$(test -d /sys/firmware/efi/efivars/)
 
