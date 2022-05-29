@@ -89,6 +89,7 @@ mv dotfiles/{dwm,dwmblocks-async,dmenu} .config/suckless/
 mv dotfiles/sb-scripts/* /usr/bin/
 
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
+mv dotfiles/what.png Stuff/media/images/avatar.png
 mv dotfiles/wall.png Stuff/media/wallpapers/
 
 cd dotfiles
