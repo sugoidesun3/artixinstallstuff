@@ -3,10 +3,9 @@ disco=$(cat /disco)
 starttime=$(cat /starttime)
 isefi=$(test -d /sys/firmware/efi/efivars/)
 pacman -S coreutils
-sed -i "s/#ParallelDownloads = 5/ParallelDownloads = $(nproc)/" /etc/pacman.conf
+sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 5" /etc/pacman.conf
 packages=(
-	'git' 'dhcpcd' 'mlocate' 'bc' 'xorg-server' 'xorg-xinit'
-	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh' 'gcc'
+	'git' 'dhcpcd' 'mlocate' 'bc' 'feh' 'zsh' 'gcc'
 	'cronie' 'doas' 'alacritty' 'which' 'fakeroot' 'make' 'grep'
 	'gzip' 'gawk' 'findutils' 'bison' 'automake' 'autoconf' 'sed'
 	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch'
@@ -81,7 +80,7 @@ cd /home/$username/
 mkdir -p .config/suckless
 tar xpvf dotfiles.tar.gz
 
-mv dotfiles/{VSCodium,alacritty,git,vim,zsh} .config/
+mv dotfiles/{VSCodium,alacritty,git,vim,zsh,X11,rc} .config/
 mv dotfiles/{dwm,dwmblocks-async,dmenu} .config/suckless/
 
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
