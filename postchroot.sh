@@ -1,28 +1,26 @@
 #!/bin/sh
 disco=$(cat /disco)
 starttime=$(cat /starttime)
-pacman -Syyu
 isefi=$(test -d /sys/firmware/efi/efivars/)
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'xorg-server' 'xorg-xinit'
 	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh'
-	'cronie' 'doas' 'alacritty' 'chromium'
+	'cronie' 'doas' 'chromium' 'alacritty'
 )
 
 echo 'configurando locale e etcs'
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc
-vim /etc/locale.gen
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sed -i 's/#pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 clear
 
 echo '-----> 4 - instalando utilidades pq neh:'
 pacman -S ${packages[@]}
-echo 'ta ok?'
-read ok
-[[ $ok == 'n' ]] && exit -1
-rc-update add cronie default
+[[ ! $? ]] && echo 'ih rapaz' && exit -1
+systemctl enable cronie.service
 echo 'permit persist :wheel' > /etc/doas.conf
 pacman -R sudo 2>/dev/null
 chown -c root:root /etc/doas.conf
@@ -45,13 +43,9 @@ grub-mkconfig -o /boot/grub/grub.cfg
 clear
 
 echo '-----> feito, soh setar as coisa aq: '
-# otimizar o startup time do openrc, capaz de dar uns 5 segundos soh nisso
-cp /etc/rc.conf /etc/rc.conf.bak
-echo 'rc_parallell="YES"' >> /etc/rc.conf
-echo 'rc_send_sighup="YES"' >> /etc/rc.conf
-echo 'rc_timeout_stopsec="10"' >> /etc/rc.conf
-echo 'rc_send_sigkill="YES"' >> /etc/rc.conf
-
+echo 'otimizando rapidao umas coisa besta do soystemD'
+systemctl disable sshd.service
+systemctl disable lvm2-monitor.service
 echo -n 'hostname? (pensa bem, hein) '
 read hostname
 echo $hostname > /etc/hostname
@@ -63,9 +57,11 @@ read username
 useradd -m -G users,wheel,audio,video -s /bin/bash $username
 passwd $username
 mv /root/dotfiles /home/$username/
+rm /disco
+rm /starttime
 clear
 minutos=$(bc <<< "($(date +%s)-$starttime)/60")
-echo "aeee, demorou soh uns $minutos minuto"
+echo "* aeee, demorou soh uns $minutos minuto"
 echo 'digo... falta o resto, mas enfim'
 echo 'tem yay, picom... alias acho q dah pra automatizar esses tbm'
 echo 'ah tem as configuracoes pra limpar a $HOME tbm'
