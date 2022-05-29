@@ -1,8 +1,9 @@
 #!/bin/sh
+pacman -S bc
 starttime=$(date +%s)
 echo -n 'configurou rede? [Y/n] '
 read resp
-if [[ "x$resp" == "xn" ] || [ "x$resp" != "xN" ]]; then
+if [[ "x$resp" == "xn" || "x$resp" == "xN" ]]; then
 	exit 0
 fi
 
@@ -23,16 +24,18 @@ echo -n 'qual disco? '
 read nomedisco
 disco="/dev/$nomedisco"
 echo 'particionando rapidao'
-if [[ "$isefi" == "y" || "$isefi" == "Y" ]]; then
+rootpartsize_mib=32768
+# rootpartsize_mib=3072
+if [ $isefi ]; then
 
 printf "mklabel gpt
 unit mib
 mkpart primary 1 512
 name 1 boot
 set 1 BOOT on
-mkpart primary 512 33280
+mkpart primary 512 $(bc <<< "512+$rootpartsize_mib")
 name 2 root
-mkpart primary 33280 -1
+mkpart primary $(bc <<< "512+$rootpartsize_mib") -1
 name 3 home
 " | parted -a optimal "$disco"
 else
@@ -42,9 +45,9 @@ unit mib
 mkpart primary 1 512
 name 1 boot
 set 1 BOOT on
-mkpart primary 512 33280
+mkpart primary 512 $(bc <<< "512+$rootpartsize_mib")
 name 2 root
-mkpart primary 33280 -1
+mkpart primary $(bc <<< "512+$rootpartsize_mib") -1
 name 3 home
 " | parted -a optimal "$disco"
 fi
@@ -70,7 +73,10 @@ echo 'gerando o fstab...'
 fstabgen -U /mnt >> /mnt/etc/fstab
 echo 'vou aproveitar e levar os arquivo pra la'
 mkdir -p /mnt/root
+echo $starttime > /mnt/starttime
+echo $disco > /mnt/disco
 cp -r dotfiles /mnt/root/dotfiles
 cp -r postchroot.sh /mnt/postchroot.sh
 echo 'vamo la'
-artix-chroot /mnt "/postchroot.sh /dev/$disco $startime"
+sleep 1
+artix-chroot /mnt "/postchroot.sh"
