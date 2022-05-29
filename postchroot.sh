@@ -2,10 +2,14 @@
 disco=$(cat /disco)
 starttime=$(cat /starttime)
 isefi=$(test -d /sys/firmware/efi/efivars/)
+pacman -S coreutils
+sed -i "s/#ParallelDownloads = 5/ParallelDownloads = $(nproc)/" /etc/pacman.conf
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'xorg-server' 'xorg-xinit'
-	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh'
-	'cronie' 'doas' 'alacritty'
+	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh' 'gcc'
+	'cronie' 'doas' 'alacritty' 'which' 'fakeroot' 'make' 'grep'
+	'gzip' 'gawk' 'findutils' 'bison' 'automake' 'autoconf' 'sed'
+	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch'
 )
 
 echo 'configurando locale e etcs'
@@ -77,11 +81,11 @@ cd /home/$username/
 mkdir -p .config/suckless
 tar xpvf dotfiles.tar.gz
 
-mv {VSCodium,alacritty,git,vim,zsh} .config/
-mv {dwm,dwmblocks-async,dmenu} .config/suckless/
+mv dotfiles/{VSCodium,alacritty,git,vim,zsh} .config/
+mv dotfiles/{dwm,dwmblocks-async,dmenu} .config/suckless/
 
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
-mv wall.png Stuff/media/wallpapers/
+mv dotfiles/wall.png Stuff/media/wallpapers/
 
 chown -R $username .
 clear
