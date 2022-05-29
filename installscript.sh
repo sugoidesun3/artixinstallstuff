@@ -81,3 +81,5 @@ mv dotfiles.tar.gz /mnt/root/
 cp postchroot.sh /mnt/
 echo 'vamo la'
 arch-chroot /mnt "/postchroot.sh"
+rm /mnt/postchroot.sh
+arch-chroot /mnt
