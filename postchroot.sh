@@ -91,18 +91,16 @@ mv dotfiles/sb-scripts/* /usr/bin/
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
 mv dotfiles/what.png Stuff/media/images/avatar.png
 mv dotfiles/wall.png Stuff/media/wallpapers/
+mv dotfiles/usersetup .
 
-cd dotfiles
-unzip dedsec-redskull.zip
+unzip dotfiles/dedsec-redskull.zip
 mkdir /boot/grub/themes
 cp -r dedsec /boot/grub/themes
-echo 'GRUB_THEME="/boot/grub/themes/dedsec/theme.txt"'>>/etc/default/grub
+echo 'GRUB_THEME="/boot/grub/themes/dedsec/theme.txt"' >> /etc/default/grub
 vim /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-
-rm -r dotfiles
-
 chown -R $username:$username .
+rm -r dotfiles
 clear
 
 minutos=$(bc <<< "($(date +%s)-$starttime)/60")
