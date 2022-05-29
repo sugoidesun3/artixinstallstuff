@@ -5,7 +5,8 @@ isefi=$(test -d /sys/firmware/efi/efivars/)
 pacman -S coreutils
 sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 5" /etc/pacman.conf
 packages=(
-	'git' 'dhcpcd' 'mlocate' 'bc' 'feh' 'zsh' 'gcc'
+	'git' 'dhcpcd' 'mlocate' 'bc' 'feh' 'zsh' 'gcc' 'firefox'
+	'xorg-server' 'xorg-xinit' 'xorg-xrandr' 'xorg-xsetroot'
 	'cronie' 'doas' 'alacritty' 'which' 'fakeroot' 'make' 'grep'
 	'gzip' 'gawk' 'findutils' 'bison' 'automake' 'autoconf' 'sed'
 	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch'
