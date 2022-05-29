@@ -1,13 +1,12 @@
 #!/bin/sh
 disco=$(cat /disco)
-rm /disco
 starttime=$(cat /starttime)
-rm /starttime
+pacman -Syyu
 isefi=$(test -d /sys/firmware/efi/efivars/)
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'xorg-server' 'xorg-xinit'
-	'xorg-xrandr' 'xorg-xsetroot' 'alacritty' 'firefox' 'feh'
-	'firefox' 'chromium' 'zsh'
+	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh'
+	'cronie' 'doas' 'alacritty' 'chromium'
 )
 
 echo 'configurando locale e etcs'
@@ -19,7 +18,10 @@ echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 clear
 
 echo '-----> 4 - instalando utilidades pq neh:'
-pacman -S cronie doas ${packages[@]}
+pacman -S ${packages[@]}
+echo 'ta ok?'
+read ok
+[[ $ok == 'n' ]] && exit -1
 rc-update add cronie default
 echo 'permit persist :wheel' > /etc/doas.conf
 pacman -R sudo 2>/dev/null
