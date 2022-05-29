@@ -3,13 +3,14 @@ disco=$(cat /disco)
 starttime=$(cat /starttime)
 isefi=$(test -d /sys/firmware/efi/efivars/)
 pacman -S coreutils
-sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 5" /etc/pacman.conf
+sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 5/" /etc/pacman.conf
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'feh' 'zsh' 'gcc' 'firefox'
 	'xorg-server' 'xorg-xinit' 'xorg-xrandr' 'xorg-xsetroot'
 	'cronie' 'doas' 'alacritty' 'which' 'fakeroot' 'make' 'grep'
 	'gzip' 'gawk' 'findutils' 'bison' 'automake' 'autoconf' 'sed'
 	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch'
+	'ttf-font-awesome' 'ttf-fira-code'
 )
 
 echo 'configurando locale e etcs'
@@ -26,6 +27,7 @@ pacman -S ${packages[@]}
 [[ ! $? ]] && echo 'ih rapaz' && exit -1
 systemctl enable cronie.service
 echo 'permit persist :wheel' > /etc/doas.conf
+echo 'permit nopass :wheel cmd reboot' >> /etc/doas.conf
 pacman -R sudo 2>/dev/null
 chown -c root:root /etc/doas.conf
 chmod -c 0400 /etc/doas.conf
@@ -84,10 +86,22 @@ tar xpvf dotfiles.tar.gz
 mv dotfiles/{VSCodium,alacritty,git,vim,zsh,X11,rc} .config/
 mv dotfiles/{dwm,dwmblocks-async,dmenu} .config/suckless/
 
+mv dotfiles/sb-scripts/* /usr/bin/
+
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
 mv dotfiles/wall.png Stuff/media/wallpapers/
 
-chown -R $username .
+cd dotfiles
+unzip dedsec-redskull.zip
+mkdir /boot/grub/themes
+cp -r dedsec /boot/grub/themes
+echo 'GRUB_THEME="/boot/grub/themes/dedsec/theme.txt"'>>/etc/default/grub
+vim /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+rm -r dotfiles
+
+chown -R $username:$username .
 clear
 
 minutos=$(bc <<< "($(date +%s)-$starttime)/60")
