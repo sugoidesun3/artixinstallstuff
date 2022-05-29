@@ -5,7 +5,7 @@ isefi=$(test -d /sys/firmware/efi/efivars/)
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'xorg-server' 'xorg-xinit'
 	'xorg-xrandr' 'xorg-xsetroot' 'firefox' 'feh' 'zsh'
-	'cronie' 'doas' 'chromium' 'alacritty'
+	'cronie' 'doas' 'alacritty'
 )
 
 echo 'configurando locale e etcs'
@@ -43,25 +43,48 @@ grub-mkconfig -o /boot/grub/grub.cfg
 clear
 
 echo '-----> feito, soh setar as coisa aq: '
-echo 'otimizando rapidao umas coisa besta do soystemD'
-systemctl disable sshd.service
-systemctl disable lvm2-monitor.service
-echo -n 'hostname? (pensa bem, hein) '
-read hostname
+echo 'especificacoes do XDG (limpar a $HOME um cadin)'
+print 'XDG_CONFIG_HOME="$HOME"/.config
+XDG_CACHE_HOME="$HOME"/.local/cache
+XDG_DATA_HOME="$HOME"/.local/share
+XDG_STATE_HOME="$HOME"/.local/state
+' >> /etc/profile
+print 'XDG_CONFIG_HOME="$HOME"/.config
+XDG_CACHE_HOME="$HOME"/.local/cache
+XDG_DATA_HOME="$HOME"/.local/share
+XDG_STATE_HOME="$HOME"/.local/state
+' >> /etc/zsh/zshenv
+echo 'ZDOTDIR=$HOME/.config/zsh' >> /etc/zsh/zshenv
+print "if [[ $UID -ge 1000 && -d $HOME/.local/bin && -z $(echo $PATH | grep -o $HOME/.local/bin) ]]
+then
+    export PATH=\"${PATH}:$HOME/.local/bin\"
+fi
+" >> /etc/profile
+
+hostname='immaterium'
+username='khorne'
+
 echo $hostname > /etc/hostname
 printf "127.0.0.1\tlocalhost\n::1\tlocalhost\n127.0.0.1\t$hostname.localdomain $hostname" >> /etc/hosts
-echo -n 'senha root: '
 passwd
-echo -n 'usuario: '
-read username
 useradd -m -G users,wheel,audio,video -s /bin/bash $username
 passwd $username
-mv /root/dotfiles /home/$username/
+mv /root/dotfiles.tar.gz /home/$username/
 rm /disco
 rm /starttime
+
+cd /home/$username/
+mkdir -p .config/suckless
+tar xpvf dotfiles.tar.gz
+
+mv {VSCodium,alacritty,git,vim,zsh} .config/
+mv {dwm,dwmblocks-async,dmenu} .config/suckless/
+
+mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
+mv wall.png Stuff/media/wallpapers/
+
+chown -R $username .
 clear
+
 minutos=$(bc <<< "($(date +%s)-$starttime)/60")
 echo "* aeee, demorou soh uns $minutos minuto"
-echo 'digo... falta o resto, mas enfim'
-echo 'tem yay, picom... alias acho q dah pra automatizar esses tbm'
-echo 'ah tem as configuracoes pra limpar a $HOME tbm'

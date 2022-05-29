@@ -56,9 +56,7 @@ mkfs.fat -F 32 "${disco}1"
 mkfs.ext4 "${disco}2"
 mkfs.ext4 "${disco}3"
 mkfs.ext4 "${disco}4"
-echo 'deu caca? '
-read deucaca
-[[ $deucaca == 'y' || $deucaca == 'Y' ]] && exit -1
+[[ $? -ne 0 ]] && echo 'cagou aq nos disco' && exit -1
 clear
 
 echo '-----> 2 - montando os treco & instalando o sistema:'
@@ -78,8 +76,7 @@ echo 'vou aproveitar e levar os arquivo pra la'
 mkdir -p /mnt/root
 echo $starttime > /mnt/starttime
 echo $disco > /mnt/disco
-cp -r dotfiles /mnt/root/dotfiles
-cp -r postchroot.sh /mnt/postchroot.sh
+mv dotfiles.tar.gz /mnt/root/
+cp postchroot.sh /mnt/
 echo 'vamo la'
-sleep 1
-artix-chroot /mnt "/postchroot.sh"
+arch-chroot /mnt "/postchroot.sh"
