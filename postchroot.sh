@@ -44,22 +44,22 @@ clear
 
 echo '-----> feito, soh setar as coisa aq: '
 echo 'especificacoes do XDG (limpar a $HOME um cadin)'
-print 'XDG_CONFIG_HOME="$HOME"/.config
+printf 'XDG_CONFIG_HOME="$HOME"/.config
 XDG_CACHE_HOME="$HOME"/.local/cache
 XDG_DATA_HOME="$HOME"/.local/share
 XDG_STATE_HOME="$HOME"/.local/state
 ' >> /etc/profile
-print 'XDG_CONFIG_HOME="$HOME"/.config
+printf 'XDG_CONFIG_HOME="$HOME"/.config
 XDG_CACHE_HOME="$HOME"/.local/cache
 XDG_DATA_HOME="$HOME"/.local/share
 XDG_STATE_HOME="$HOME"/.local/state
 ' >> /etc/zsh/zshenv
 echo 'ZDOTDIR=$HOME/.config/zsh' >> /etc/zsh/zshenv
-print "if [[ $UID -ge 1000 && -d $HOME/.local/bin && -z $(echo $PATH | grep -o $HOME/.local/bin) ]]
+printf 'if [[ $UID -ge 1000 && -d $HOME/.local/bin && -z $(echo $PATH | grep -o $HOME/.local/bin) ]]
 then
-    export PATH=\"${PATH}:$HOME/.local/bin\"
+    export PATH="${PATH}:$HOME/.local/bin"
 fi
-" >> /etc/profile
+' >> /etc/profile
 
 hostname='immaterium'
 username='khorne'

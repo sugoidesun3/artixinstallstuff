@@ -68,6 +68,7 @@ mount "${disco}4" /mnt/home
 vim /etc/pacman.d/mirrorlist
 echo 'esse demora um cadin'
 pacstrap /mnt base linux-zen linux-zen-headers linux-firmware vim man-pages
+[[ $? -ne 0 ]] && echo 'dafuq' && exit -1
 clear
 echo '-----> 3 - configuracoes basicas:'
 echo 'gerando o fstab...'
