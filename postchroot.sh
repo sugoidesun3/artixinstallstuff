@@ -2,15 +2,14 @@
 disco=$(cat /disco)
 starttime=$(cat /starttime)
 isefi=$(test -d /sys/firmware/efi/efivars/)
-pacman -S coreutils
 sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 5/" /etc/pacman.conf
 packages=(
 	'git' 'dhcpcd' 'mlocate' 'bc' 'feh' 'zsh' 'gcc' 'firefox'
 	'xorg-server' 'xorg-xinit' 'xorg-xrandr' 'xorg-xsetroot'
 	'cronie' 'doas' 'alacritty' 'which' 'fakeroot' 'make' 'grep'
 	'gzip' 'gawk' 'findutils' 'bison' 'automake' 'autoconf' 'sed'
-	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch'
-	'ttf-font-awesome' 'ttf-fira-code'
+	'pkgconf' 'file' 'm4' 'libtool' 'groff' 'patch' 'pulseaudio'
+	'ttf-font-awesome' 'ttf-fira-code' 'unzip' 'alsa-utils'
 )
 
 echo 'configurando locale e etcs'
@@ -70,6 +69,8 @@ fi
 hostname='immaterium'
 username='khorne'
 
+# prevent this annoying ass module to even load
+echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf
 echo $hostname > /etc/hostname
 printf "127.0.0.1\tlocalhost\n::1\tlocalhost\n127.0.0.1\t$hostname.localdomain $hostname" >> /etc/hosts
 passwd
@@ -93,17 +94,10 @@ mv dotfiles/what.png Stuff/media/images/avatar.png
 mv dotfiles/wall.png Stuff/media/wallpapers/
 mv dotfiles/usersetup.sh .
 
-unzip dotfiles/dedsec-redskull.zip
-echo -n 'taokei? '
-read ok
+unzip dotfiles/dedsec-*.zip
+
 python3 install.py
 
-mkdir /boot/grub/themes
-
-vim /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
-
-sleep 5
 chown -R $username:$username .
 rm -r dotfiles
 clear

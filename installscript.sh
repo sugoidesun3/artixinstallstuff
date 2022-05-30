@@ -8,8 +8,6 @@ echo 'dxa eu ver....'
 ping -c4 8.8.8.8 >/dev/null
 [[ "$?" -ne "0" ]] && echo 'configurou o caraio' && exit -1
 
-pacman -S bc
-
 isefi=$(test -d /sys/firmware/efi/efivars/)
 
 echo 'ta, soh ajeitar esses treco aq q eu sei q eu esqueco'
@@ -25,7 +23,7 @@ disco="/dev/$nomedisco"
 echo 'particionando rapidao'
 rootpsize=32768
 varpsize=$(bc<<<"2*$rootpsize")
-# rootpartsize_mib=3072
+
 if [ $isefi ]; then
 
 printf "mklabel gpt
@@ -73,8 +71,8 @@ clear
 echo '-----> 3 - configuracoes basicas:'
 echo 'gerando o fstab...'
 genfstab -U /mnt >> /mnt/etc/fstab
-echo 'vou aproveitar e levar os arquivo pra la'
-mkdir -p /mnt/root
+echo 'aproveitar e levar os arquivo pra la'
+mkdir /mnt/root
 echo $starttime > /mnt/starttime
 echo $disco > /mnt/disco
 mv dotfiles.tar.gz /mnt/root/
