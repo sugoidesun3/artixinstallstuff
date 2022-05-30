@@ -94,11 +94,11 @@ mv dotfiles/wall.png Stuff/media/wallpapers/
 mv dotfiles/usersetup.sh .
 
 unzip dotfiles/dedsec-redskull.zip
-
+echo -n 'taokei? '
+read ok
 python3 install.py
 
 mkdir /boot/grub/themes
-
 
 vim /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg

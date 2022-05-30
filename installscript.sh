@@ -8,16 +8,16 @@ echo 'dxa eu ver....'
 ping -c4 8.8.8.8 >/dev/null
 [[ "$?" -ne "0" ]] && echo 'configurou o caraio' && exit -1
 
-pacman -S bc vim
+pacman -S bc
 
 isefi=$(test -d /sys/firmware/efi/efivars/)
-[[ $isefi ]] && echo 'Instalacao EFI' || echo 'Instalacao BIOS'
 
 echo 'ta, soh ajeitar esses treco aq q eu sei q eu esqueco'
 timedatectl set-ntp true
 clear
 
 echo '-----> 1 - discos:'
+[[ $isefi ]] && echo 'Instalacao EFI' || echo 'Instalacao BIOS'
 lsblk
 echo -n 'qual disco? '
 read nomedisco
