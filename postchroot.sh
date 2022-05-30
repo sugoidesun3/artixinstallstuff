@@ -95,10 +95,12 @@ mv dotfiles/usersetup .
 
 unzip dotfiles/dedsec-redskull.zip
 mkdir /boot/grub/themes
-cp -r dedsec /boot/grub/themes/
-echo 'GRUB_THEME="/boot/grub/themes/dedsec/theme.txt"' >> /etc/default/grub
+
+python3 install.py
+
 vim /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
 sleep 5
 chown -R $username:$username .
 rm -r dotfiles
