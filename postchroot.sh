@@ -91,12 +91,14 @@ mv dotfiles/sb-scripts/* /usr/bin/
 mkdir -p {Stuff/{projects,media/{videos,images,wallpapers},books},Downloads,Music}
 mv dotfiles/what.png Stuff/media/images/avatar.png
 mv dotfiles/wall.png Stuff/media/wallpapers/
-mv dotfiles/usersetup .
+mv dotfiles/usersetup.sh .
 
 unzip dotfiles/dedsec-redskull.zip
-mkdir /boot/grub/themes
 
 python3 install.py
+
+mkdir /boot/grub/themes
+
 
 vim /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
